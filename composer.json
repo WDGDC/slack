@@ -1,0 +1,9 @@
+{
+    "name": "wdgdc/slack",
+    "description": "Tools for Slack",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "curl/curl": "^1.9"
+    }
+}
