@@ -108,7 +108,12 @@ class Alerts
         
         foreach ($active as $row) {
 
-            $str = Parser::parse($row->template, $row);
+            if ($row->template) {
+                $str = Parser::parse($row->template, $row);
+            } else {
+                unset($row->template);
+                $str = json_encode($row);
+            }
 
             echo $str . "\n";
         }
