@@ -102,7 +102,7 @@ class Alerts
         }
 
         if (!count($active) > 0) {
-            die('No active alerts that match: (' . implode(', ',$match) . ')');
+            die('No active alerts that match: (' . implode(', ', array_column($match, 'id')) . ')');
         }
         
         foreach ($active as $row) {
