@@ -7,6 +7,18 @@ use Akamai\Open\EdgeGrid\Client;
 class Alerts 
 {
 
+    protected static function call($url) {
+        $response = self::client()->get($url);
+
+        $data = json_decode($response->getBody());
+
+        if (!$data) {
+            die("Response error for call: {$url} \n");
+        }
+
+        return $data;
+    }
+
     protected static function client() {
 
         $config = Config::get();
@@ -27,13 +39,10 @@ class Alerts
 
     protected static function types() {
         // Get Types
-        $response = self::client()->get('/alerts/v2/alert-definitions');
 
-        $data = json_decode($response->getBody());
+        $url = '/alerts/v2/alert-definitions';
 
-        if (!$data) {
-            die('error');
-        }
+       $data = self::call($url);
 
         echo '--- Alert Types ---' . "\n";
 
@@ -48,13 +57,9 @@ class Alerts
             return self::activeByType($type);
         }
 
-        $response = self::client()->get('/alerts/v2/alert-firings/active');
-
-        $data = json_decode($response->getBody());
-
-        if (!$data) {
-            die('error');
-        }
+        $url = '/alerts/v2/alert-firings/active';
+        
+        $data = self::call($url);
 
         echo '--- Active Alerts ---' . "\n";
 
@@ -75,13 +80,9 @@ class Alerts
 
         $match = $config['akamai']['alerts'];
 
-        $response = self::client()->get('/alerts/v2/alert-firings/active');
+        $url = '/alerts/v2/alert-firings/active';
 
-        $data = json_decode($response->getBody());
-
-        if (!$data) {
-            die('error');
-        }
+        $data = self::call($url);
 
         $active = [];  
 
@@ -102,7 +103,7 @@ class Alerts
         }
 
         if (!count($active) > 0) {
-            die('No active alerts that match: (' . implode(', ', array_column($match, 'id')) . ')');
+            die('No active alerts that match: (' . implode(', ', array_column($match, 'id')) . ')' . "\n");
         }
         
         foreach ($active as $row) {
@@ -118,26 +119,17 @@ class Alerts
 
 
     protected static function detail($definitionId) {
-
-        $response = self::client()->get("/alerts/v2/alert-summaries/{$definitionId}/details");
-
-        $data = json_decode($response->getBody());
-
-        if (!$data) {
-            die('error');
-        }
+        $url = "/alerts/v2/alert-summaries/{$definitionId}/details";
+        
+        $data = self::call($url);
         
     }
 
     protected static function activeByType($type) {
 
-        $response = self::client()->get("/alerts/v2/alert-definitions/{$type}/alert-firings");
-
-        $data = json_decode($response->getBody());
-
-        if (!$data) {
-            die('error');
-        }
+        $url = "/alerts/v2/alert-definitions/{$type}/alert-firings";
+        
+        $data = self::call($url);
 
         echo "--- Alerts: {$type} ---\n";
 
