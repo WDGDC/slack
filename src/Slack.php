@@ -8,35 +8,9 @@ class Slack
     protected static $message;
     protected static $attachments = [];
 
-    public static function _403($message = 'error') {
-        header('HTTP/1.0 403 Forbidden');
-        die($message);
-    }
-
-    public static function config() {
-        
-        static $config = null;
-
-        if ($config) {
-            return $config;
-        }
-
-        if (!file_exists('../config.json')) {
-            _403();
-        }
-
-        $config = json_decode(file_get_contents('../config.json'), true);
-
-        if (!$config) {
-            _403('Bad Config');
-        }
-
-        return $config;
-    }
-
     public static function init($verifyToken = true) {
 
-        $config = self::config();
+        $config = Config::get();
 
         if (php_sapi_name() === 'cli') {
             $token = true;
@@ -104,8 +78,3 @@ class Slack
     }
 
 }
-
-function _403($message = 'error') {
-    Slack::_403($message);
-}
-

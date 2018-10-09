@@ -9,7 +9,7 @@ class Alerts
 
     protected static function client() {
 
-        $config = Slack::config();
+        $config = Config::get();
 
         $client_secret  = $config['akamai']['client_secret'];
         $host           = $config['akamai']['host'];
@@ -67,7 +67,7 @@ class Alerts
 
     protected static function alerts() {
 
-        $config = Slack::config();
+        $config = Config::get();
 
         if (!isset($config['akamai']['alerts'])) {
             die('Must set akamai.alerts in config.json.');
@@ -171,8 +171,9 @@ class Alerts
         if (!isset($argv[1]) || !$argv[1]) {
             echo "Must select action.\n";
 
-            echo " - types \n";
-            echo " - active [type]\n";
+            echo " - types : Display list of all alert types.\n";
+            echo " - active [type] : Display active list of alerts, Optionally by type.\n";
+            echo " - alerts : Display only active alerts defined in config.json.\n";
 
             exit(1);
         }
