@@ -4,6 +4,13 @@
     "type": "project",
     "license": "MIT",
     "require": {
-        "curl/curl": "^1.9"
+        "curl/curl": "^1.9",
+        "chaplean/bonusly-client-bundle": "^1.0",
+        "akamai-open/edgegrid-client": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
     }
 }
