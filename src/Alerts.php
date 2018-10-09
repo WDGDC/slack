@@ -161,7 +161,8 @@ class Alerts
     }
 
     public static function init() {
-        
+        global $argv;
+
         if (isset($_POST['text'])) {
             $argv = explode(' ', $_POST['text']);
             array_unshift($argv, true);
