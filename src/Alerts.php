@@ -71,8 +71,12 @@ class Alerts
     }
 
     protected static function alerts() {
+         global $options;
 
         $config = Config::get();
+
+        $raw = in_array('--raw', $options);
+        
 
         if (!isset($config['akamai']['alerts'])) {
             die('Must set akamai.alerts in config.json.');
@@ -108,7 +112,7 @@ class Alerts
         
         foreach ($active as $row) {
 
-            if ($row->template) {
+            if ($row->template && !$raw) {
                 $str = Parser::parse($row->template, $row);
             } else {
                 unset($row->template);
@@ -158,12 +162,18 @@ class Alerts
     }
 
     public static function init() {
-        global $argv;
+        global $argv, $options;
 
         if (isset($_POST['text'])) {
             $argv = explode(' ', $_POST['text']);
-            array_unshift($argv, true);
+            array_unshift($argv, $_SERVER['PHP_SELF']);
         }
+
+        $options = array_values(array_filter($argv, function($arg){
+            return strpos($arg, '--') === 0;
+        }));
+
+    
 
         if (!isset($argv[1]) || !$argv[1]) {
             echo "Must select action.\n";
